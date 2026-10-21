@@ -2,6 +2,8 @@
 #define HEAP_H
 #include <functional>
 #include <stdexcept>
+#include <vector>
+#include <utility>
 
 template <typename T, typename PComparator = std::less<T> >
 class Heap
@@ -61,6 +63,9 @@ public:
 
 private:
   /// Add whatever helper functions and data members you need below
+  std::vector<T> data_;
+  int m_;
+  PComparator comp_;
 
 
 
@@ -68,6 +73,28 @@ private:
 };
 
 // Add implementation of member functions here
+
+template <typename T, typename PComparator> 
+Heap<T, PComparator>::Heap(int m, PComparator c)
+  : data_(), m_(m), comp_(c){
+    if (m < 2){
+      throw std::invalid_argument("m must be at least 2");
+    }
+  }
+  template <typename T, typename PComparator>
+  Heap<T, PComparator>::~Heap(){
+
+  }
+  template <typename T, typename PComparator>
+  bool Heap<T, PComparator>::empty() const{
+    return data_.empty();
+  }
+  template <typename T, typename PComparator>
+  size_t Heap<T, PComparator>::size() const{
+    return data_.size();
+  }
+
+  
 
 
 // We will start top() for you to handle the case of 
@@ -81,15 +108,12 @@ T const & Heap<T,PComparator>::top() const
     // ================================
     // throw the appropriate exception
     // ================================
-
-
+    throw std::underflow_error("Heap is empty");
+  }
+  return data_[0];
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
-
-
-
-}
 
 
 // We will start pop() for you to handle the case of 
@@ -101,15 +125,51 @@ void Heap<T,PComparator>::pop()
     // ================================
     // throw the appropriate exception
     // ================================
-
+    throw std::underflow_error("Heap is empty");
 
   }
+  data_[0] = data_.back();
+  data_.pop_back();
+  size_t i = 0;
 
+  while (true) {
+    size_t best = i;
 
+    for (int j = 1; j <= m_; j++){
+      size_t child = m_*i + j;
 
+      if (child < data_.size() && comp_(data_[child], data_[best])){
+        best = child;
+      }
+    }
+    if (best == i){
+      break;
+    }
+    std::swap(data_[i], data_[best]);
+    i = best;
+  }
 }
 
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::push(const T& item){
+  data_.push_back(item);
 
+  size_t i = data_.size() - 1;
+
+  while(i > 0){
+    size_t parent = (i -1) / m_;
+
+    if (comp_(data_[i], data_[parent])){
+      std::swap(data_[i], data_[parent]);
+      i = parent;
+
+    }
+    else {
+      break;
+    }
+  }
+
+}
 
 #endif
 
