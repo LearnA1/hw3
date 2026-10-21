@@ -84,7 +84,7 @@ Node* llfilter(Node* head, Comp pred)
     // Provide your implementation below
     //*********************************************
 
-    if (head == nulltpr){
+    if (head == nullptr){
       return nullptr;
     }
     Node* curr = head;

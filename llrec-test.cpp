@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     Node* filterHead = readList(argv[1]);
     print(filterHead);
 
-    filderHead = llfilter(filterHead, isOdd());
+    filterHead = llfilter(filterHead, isOdd());
     print(filterHead);
 
     dealloc(filterHead);
